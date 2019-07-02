@@ -19,7 +19,7 @@ from django.core.management.base import BaseCommand
 from django.core import serializers
 from django.core.serializers.json import DjangoJSONEncoder
 
-from akvo.rsr.models import Result, Project
+from akvo.rsr.models import Result, Project, IndicatorDimensionName
 
 
 class Command(BaseCommand):
@@ -38,6 +38,9 @@ class Command(BaseCommand):
         project = Project.objects.get(id=project_id)
         results = Result.objects.filter(project=project)
         data = self._get_related_objects(results)
+        descendants = project.descendants(depth=1)
+        indicator_dimension_names = IndicatorDimensionName.objects.filter(project__in=descendants)
+        data = self._get_related_objects(indicator_dimension_names, data)
         with open('results-data-{}-and-children.json'.format(project_id), 'w') as f:
             f.write(DjangoJSONEncoder(indent=2).encode(data))
 
