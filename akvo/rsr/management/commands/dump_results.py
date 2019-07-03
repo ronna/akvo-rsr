@@ -41,8 +41,13 @@ class Command(BaseCommand):
         descendants = project.descendants(depth=1)
         indicator_dimension_names = IndicatorDimensionName.objects.filter(project__in=descendants)
         data = self._get_related_objects(indicator_dimension_names, data)
-        with open('results-data-{}-and-children.json'.format(project_id), 'w') as f:
+        path = 'results-data-{}-and-children.json'.format(project_id)
+        with open(path, 'w') as f:
             f.write(DjangoJSONEncoder(indent=2).encode(data))
+        children = ','.join(str(pid) for pid in project.children_all().values_list('id', flat=True))
+        print('To restore the dump run the following command:')
+        print('python manage.py load_results {pid} {path} {children}'.format(
+            pid=project_id, path=path, children=children))
 
     def _get_related_objects(self, qs, data=None):
         qs_serialized = serializers.serialize("python", qs)
