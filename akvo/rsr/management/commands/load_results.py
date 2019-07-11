@@ -193,8 +193,13 @@ class Command(BaseCommand):
 
     def _group_by_model(self, data):
         grouped_by_model = defaultdict(list)
+        grouped_by_model_pks = defaultdict(set)
         for element in data:
-            grouped_by_model[element['model']].append(element)
+            model = element['model']
+            pk = element['pk']
+            if pk not in grouped_by_model_pks[model]:
+                grouped_by_model[model].append(element)
+                grouped_by_model_pks[model].add(pk)
 
         return grouped_by_model
 
