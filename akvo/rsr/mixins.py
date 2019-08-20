@@ -5,6 +5,8 @@
 # For additional details on the GNU license please see < http://www.gnu.org/licenses/agpl.html >.
 
 from django.contrib import admin
+from django.contrib.admin.models import LogEntry, ADDITION, CHANGE, DELETION
+from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
@@ -76,3 +78,25 @@ class IndicatorUpdateMixin(models.Model):
 
     class Meta:
         abstract = True
+
+
+class LogProjectActionMixin(object):
+
+    def log_addition(self, user, project, message=''):
+        self.log_action(ADDITION, user, project, message)
+
+    def log_changes(self, user, project, message=''):
+        self.log_action(CHANGE, user, project, message)
+
+    def log_deletion(self, user, project, message=''):
+        self.log_action(DELETION, user, project, message)
+
+    def log_action(self, action_flag, user, project, message=''):
+        LogEntry.objects.log_action(
+            user_id=user.pk,
+            content_type_id=ContentType.objects.get_for_model(project).pk,
+            object_id=project.pk,
+            object_repr=project.__unicode__(),
+            action_flag=action_flag,
+            change_message=message
+        )
