@@ -5,7 +5,7 @@ RUN set -ex; apt-get update && \
     libgeos-dev curl git postgresql-client runit cron \
     libjpeg-dev libfreetype6-dev \
     libffi-dev libssl-dev \
-    libxml2-dev libxslt1-dev zlib1g-dev python-dev && \
+    libxml2-dev libxslt1-dev zlib1g-dev python-dev wkhtmltopdf && \
     rm -rf /var/lib/apt/lists/*
 
 WORKDIR /var/akvo/rsr/code
