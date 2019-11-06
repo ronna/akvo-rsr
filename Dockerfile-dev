@@ -5,7 +5,8 @@ RUN set -ex; apt-get update && \
     libgeos-dev curl git postgresql-client runit cron \
     libjpeg-dev libfreetype6-dev \
     libffi-dev libssl-dev \
-    libxml2-dev libxslt1-dev zlib1g-dev python-dev wkhtmltopdf gosu && \
+    libxml2-dev libxslt1-dev zlib1g-dev python-dev \
+    unoconv libreoffice-writer libreoffice-java-common wkhtmltopdf gosu && \
     rm -rf /var/lib/apt/lists/*
 
 RUN curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && \

@@ -174,6 +174,12 @@ urlpatterns += (
     url(r'^py-reports/project/(?P<project_id>\d+)/$',
         py_reports.render_pdf, name='py-reports-project'),
 
+    url(r'^py-reports/project/(?P<project_id>\d+)/kickstart/$',
+        py_reports.render_kickstart_docx, name='py-reports-project-kickstart'),
+
+    url(r'^py-reports/project-docx/(?P<project_id>\d+)/$',
+        py_reports.render_docx, name='py-reports-project-docx'),
+
     # IATI file
     url(r'^project/(?P<project_id>\d+)/iati/$',
         project.iati, name='project-iati'),

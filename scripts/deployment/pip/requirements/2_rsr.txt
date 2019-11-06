@@ -98,5 +98,11 @@ django-webpack-loader
 # Password lockdown partners site
 django-lockdown==2.0.0
 
+six==1.10.0
+
 # Pdf generator
 pdfkit==0.6.1
+python-docx==0.8.7
+Jinja2==2.10.3
+docxtpl==0.6.3
+beautifulsoup4==4.8.1
