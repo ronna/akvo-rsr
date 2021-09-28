@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next'
 import Color from 'color'
 import ShowMoreText from 'react-show-more-text'
 import countriesDict from '../../utils/countries-dict'
-import {setNumberFormat} from '../../utils/misc'
+import { setNumberFormat } from '../../utils/misc'
 import TargetCharts from '../../utils/target-charts'
 
 const { Panel } = Collapse
@@ -76,7 +76,7 @@ let scrollingTransition
 let tmid
 const stickyHeaderHeight = 162 + 80
 
-const Period = ({ period, periodIndex, targetsAt, indicatorType, scoreOptions, topCountryFilter, ...props }) => {
+const Period = ({ selected, period, periodIndex, targetsAt, indicatorType, scoreOptions, topCountryFilter, ...props }) => {
   const { t } = useTranslation()
   const [pinned, setPinned] = useState(-1)
   const [openedItem, setOpenedItem] = useState(null)
@@ -185,7 +185,13 @@ const Period = ({ period, periodIndex, targetsAt, indicatorType, scoreOptions, t
           <h5>{moment(period.periodStart, 'DD/MM/YYYY').format('DD MMM YYYY')} - {moment(period.periodEnd, 'DD/MM/YYYY').format('DD MMM YYYY')}</h5>
           <ul className="small-stats">
             <li><b>{filteredContributors.length}</b> {t('contributor_s', { count: filteredContributors.length })}</li>
-            <li><b>{filteredCountries.length}</b> {t('country_s', { count: filteredCountries.length })}</li>
+            <li>
+              {
+                selected?.countries?.length === 1
+                  ? countriesDict[selected?.countries[0]] || ''
+                  : <><b>{filteredCountries.length}</b> {t('country_s', { count: filteredCountries.length })}</>
+              }
+            </li>
           </ul>
         </div>,
         indicatorType === 'quantitative' &&
@@ -318,7 +324,7 @@ const Period = ({ period, periodIndex, targetsAt, indicatorType, scoreOptions, t
                     <p>
                       {project.projectSubtitle && <span>{project.projectSubtitle}</span>}
                       {project.country && <span><Icon type="environment" /> {countriesDict[project.country.isoCode]}</span>}
-                    &nbsp;
+                      &nbsp;
                       {project.contributors.length > 0 && <b>{t('nsubcontributors', { count: project.contributors.length })}</b>}
                       <b>&nbsp;</b>
                     </p>
@@ -422,7 +428,7 @@ const Disaggregations = ({ disaggTooltipRef: tooltipRef, disaggregationContribut
   )
 }
 
-const Indicator = ({ periods, indicatorType, countryFilter, scoreOptions, targetsAt, indicator }) => {
+const Indicator = ({ periods, indicatorType, countryFilter, scoreOptions, targetsAt, indicator, selected }) => {
   const initActualValue = 0
   const sumActualValue = periods.reduce((total, currentValue) => total + currentValue.actualValue, initActualValue)
   return (
@@ -445,7 +451,7 @@ const Indicator = ({ periods, indicatorType, countryFilter, scoreOptions, target
         </Row>
       )}
       <Collapse destroyInactivePanel expandIcon={({ isActive }) => <ExpandIcon isActive={isActive} />}>
-        {periods.map((period, index) => <Period {...{ period, index, targetsAt, indicatorType, scoreOptions, topCountryFilter: countryFilter }} />)}
+        {periods.map((period, index) => <Period {...{ selected, period, index, targetsAt, indicatorType, scoreOptions, topCountryFilter: countryFilter }} />)}
       </Collapse>
     </div>
   )
