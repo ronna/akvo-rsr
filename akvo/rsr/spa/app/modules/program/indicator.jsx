@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next'
 import Color from 'color'
 import ShowMoreText from 'react-show-more-text'
 import countriesDict from '../../utils/countries-dict'
-import { setNumberFormat } from '../../utils/misc'
+import { setNumberFormat, subString } from '../../utils/misc'
 import TargetCharts from '../../utils/target-charts'
 
 const { Panel } = Collapse
@@ -184,7 +184,13 @@ const Period = ({ selected, period, periodIndex, targetsAt, indicatorType, score
         <div>
           <h5>{moment(period.periodStart, 'DD/MM/YYYY').format('DD MMM YYYY')} - {moment(period.periodEnd, 'DD/MM/YYYY').format('DD MMM YYYY')}</h5>
           <ul className="small-stats">
-            <li><b>{filteredContributors.length}</b> {t('contributor_s', { count: filteredContributors.length })}</li>
+            <li>
+              {
+                filteredContributors?.length === 1
+                  ? subString(filteredContributors[0]?.projectTitle || '')
+                  : <><b>{filteredContributors.length}</b> {t('contributor_s', { count: filteredContributors.length })}</>
+              }
+            </li>
             <li>
               {
                 selected?.countries?.length === 1

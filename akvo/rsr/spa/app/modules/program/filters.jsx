@@ -14,6 +14,7 @@ import {
 } from 'antd'
 import classNames from 'classnames'
 import countriesDict from '../../utils/countries-dict'
+import { subString } from '../../utils/misc'
 
 const Item = ({ type, item }) => {
   switch (type) {
@@ -128,7 +129,7 @@ const SelectForm = ({
   )
 }
 
-const Taggable = ({ text, dataId, type, onClose }) => <Tag onClose={() => onClose(dataId, type)} closable>{text?.replace(/^(.{15}[^\s]*).*/, '$1')}</Tag>
+const Taggable = ({ text, dataId, type, onClose }) => <Tag onClose={() => onClose(dataId, type)} closable>{subString(text)}</Tag>
 
 const Filters = (props) => {
   const [visible, setVisible] = useState(false)

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Collapse, Icon, Spin } from 'antd'
+import { Collapse, Icon, Skeleton, Spin } from 'antd'
 import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 import Indicator from './indicator'
@@ -19,19 +19,17 @@ const Result = ({
   result,
   results,
   sources,
+  indicators,
   programId,
   targetsAt,
   countryFilter,
   setResults,
   setSources,
+  setIndicators,
   onIndicators
 }) => {
   const { t } = useTranslation()
   const [loading, setLoading] = useState(true)
-  const [indicators, setIndicators] = useState({
-    id: null,
-    data: []
-  })
   const handleOnRequestIndicators = () => {
     api
       .get(`/project/${programId}/result/${result.id}/`)
@@ -64,24 +62,26 @@ const Result = ({
       handleOnRequestIndicators()
     }
   }, [result, results, sources, indicators, loading])
+  const sloading = ((loading && !result?.fetch) || indicators?.data === null)
   return (
     <Aux>
-      {(loading && !result?.fetch) ? <div className="loading-container"><Spin indicator={<Icon type="loading" style={{ fontSize: 32 }} spin />} /></div> : null}
-      <Collapse defaultActiveKey={result?.indicators?.map((it) => it.id)} expandIcon={({ isActive }) => <ExpandIcon isActive={isActive} />}>
-        {result?.indicators?.map((indicator) =>
-          <Panel
-            key={indicator.id}
-            header={
-              <StickyClass top={40}>
-                <h3>{indicator.title}</h3>
-                <div><span className="type">{indicator.type}</span> <span className="periods">{t('nperiods', { count: indicator.periodCount })}</span></div>
-              </StickyClass>}
-            destroyInactivePanel
-          >
-            <Indicator periods={indicator.periods} indicatorType={indicator.type} scoreOptions={indicator.scoreOptions} {...{ countryFilter, targetsAt, indicator, selected }} />
-          </Panel>
-        )}
-      </Collapse>
+      <Skeleton loading={sloading}>
+        <Collapse defaultActiveKey={result?.indicators?.map((it) => it.id)} expandIcon={({ isActive }) => <ExpandIcon isActive={isActive} />}>
+          {result?.indicators?.map((indicator) =>
+            <Panel
+              key={indicator.id}
+              header={
+                <StickyClass top={40}>
+                  <h3>{indicator.title}</h3>
+                  <div><span className="type">{indicator.type}</span> <span className="periods">{t('nperiods', { count: indicator.periodCount })}</span></div>
+                </StickyClass>}
+              destroyInactivePanel
+            >
+              <Indicator periods={indicator.periods} indicatorType={indicator.type} scoreOptions={indicator.scoreOptions} {...{ countryFilter, targetsAt, indicator, selected }} />
+            </Panel>
+          )}
+        </Collapse>
+      </Skeleton>
     </Aux>
   )
 }

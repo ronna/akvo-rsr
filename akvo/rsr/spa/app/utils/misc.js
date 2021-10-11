@@ -186,3 +186,7 @@ export const wordWrap = (s, w) => {
     )
   : ''
 }
+/**
+ * Substring
+ */
+export const subString = (text) => text?.replace(/^(.{15}[^\s]*).*/, `$1${text.length > 25 ? '...' : ''}`)

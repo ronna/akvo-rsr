@@ -36,6 +36,10 @@ const ProgramView = ({
   setSources
 }) => {
   const [filtering, setFiltering] = useState(false)
+  const [indicators, setIndicators] = useState({
+    id: null,
+    data: []
+  })
   const { t } = useTranslation()
   const handleResultChange = (index) => {
     if (index != null) window.scroll({ top: 142 + index * 88, behavior: 'smooth' })
@@ -99,7 +103,8 @@ const ProgramView = ({
                         const r = partners?.find((pt) => pt?.id === parseInt(sp, 10))
                         return r?.value
                       })
-                    const pname = pc?.projectSubtitle?.match(/\((.*?)\)/)[1] || pc?.projectSubtitle
+                    let pname = pc?.projectSubtitle?.match(/\((.*?)\)/)
+                    pname = pname ? pname[1] : pc?.projectSubtitle
                     return selected?.contributors?.length
                       ? selected.contributors.includes(pc?.projectId?.toString())
                       : fp?.length ? fp.filter((it) => it?.includes(pname))?.length : pc
@@ -132,6 +137,10 @@ const ProgramView = ({
 
   useEffect(() => {
     if (filtering) {
+      setIndicators({
+        ...indicators,
+        data: null
+      })
       const nf = sumBy(Object.values(selected), (s) => s.length)
       setNfilter(nf)
       const ds = sources
@@ -145,6 +154,13 @@ const ProgramView = ({
           indicators: s?.indicators?.length ? handleOnIndicators(s.indicators) : s?.indicators
         }))
         ?.filter((s) => ((s.fetch && s.indicators.length) || !s.fetch))
+      setTimeout(() => {
+        const fd = ds?.find((it) => it?.id === indicators?.id)
+        setIndicators({
+          ...indicators,
+          data: fd?.indicators || []
+        })
+      }, 1500)
       setResults(ds)
       setFiltering(false)
     }
@@ -195,9 +211,11 @@ const ProgramView = ({
                 result,
                 results,
                 sources,
+                indicators,
                 targetsAt,
                 setResults,
-                setSources
+                setSources,
+                setIndicators
               }}
             />
           </Panel>
