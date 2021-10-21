@@ -22,9 +22,9 @@ from .model_querysets.employment import EmploymentQuerySet
 
 
 class Employment(models.Model):
-    organisation = models.ForeignKey('Organisation', verbose_name=_('organisation'),
+    organisation = models.ForeignKey('Organisation', on_delete=models.CASCADE, verbose_name=_('organisation'),
                                      related_name='employees')
-    user = models.ForeignKey('User', verbose_name=_('user'), related_name='employers')
+    user = models.ForeignKey('User', on_delete=models.CASCADE, verbose_name=_('user'), related_name='employers')
     group = models.ForeignKey(Group, verbose_name=_('group'), null=True,
                               related_name='employments', related_query_name='employment',
                               on_delete=models.SET_NULL,
