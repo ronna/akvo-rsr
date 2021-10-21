@@ -10,6 +10,7 @@ from django.conf import settings
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from embed_video.fields import EmbedVideoField
+from rest_framework.reverse import reverse
 from sorl.thumbnail.fields import ImageField
 
 from akvo.utils import rsr_image_path, to_gmt
@@ -84,9 +85,8 @@ class ProjectUpdate(TimestampsMixin, models.Model):
     def time_last_updated_gmt(self):
         return to_gmt(self.last_modified_at)
 
-    @models.permalink
     def get_absolute_url(self):
-        return 'update-main', (), {'project_id': self.project_id, 'update_id': self.pk}
+        return reverse('update-main', (), {'project_id': self.project_id, 'update_id': self.pk})
 
     @property
     def edited(self):

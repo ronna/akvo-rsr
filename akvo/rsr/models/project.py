@@ -27,6 +27,7 @@ from django.db import transaction
 from django.db.models import Q
 from django.contrib.postgres.fields import JSONField
 from django.utils.functional import cached_property
+from rest_framework.reverse import reverse
 
 from sorl.thumbnail.fields import ImageField
 
@@ -542,9 +543,8 @@ class Project(TimestampsMixin, models.Model):
                                              'time than end date (actual).')}
             )
 
-    @models.permalink
     def get_absolute_url(self):
-        return ('project-main', (), {'project_id': self.pk})
+        return reverse('project-main', (), {'project_id': self.pk})
 
     @property
     def cacheable_url(self):
